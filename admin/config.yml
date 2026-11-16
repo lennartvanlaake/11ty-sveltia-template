@@ -1,22 +1,32 @@
-# Sveltia CMS configuration
-
-# This is where we configure the CMS repo and its collections and fields
-# Sveltia CMS generally follows the Decap CMS configuration spec
-# Decap CMS docs: https://decapcms.org/docs/intro/
-# Sveltia CMS docs: https://github.com/sveltia/sveltia-cms#features
-
-# Enter your GitHub repo path and branch (defaults to master)
+# Sveltia CMS configuration.
+#
+# This starter uses Sveltia's LOCAL workflow:
+# 1. Run `bun run serve`.
+# 2. Open http://localhost:8080/admin/.
+# 3. Choose "Work with Local Repository" and select this project folder.
+#
+# No OAuth server or third-party account is required for local editing.
+# The backend below is still required by Sveltia's configuration format.
+# Replace the placeholder only if you later enable live GitHub editing.
 backend:
   name: github
-  repo: danurbanowicz/eleventy-sveltia-cms-starter
-  branch: master
+  repo: your-github-user/your-repo
+  branch: main
 
-# The folder used to store uploaded images
+# Live GitHub editing is intentionally not configured.
+# If you enable it later, deploy Sveltia CMS Authenticator (Cloudflare Workers)
+# and uncomment `base_url`:
+# https://sveltiacms.app/en/docs/backends/github
+# base_url: https://your-authenticator.example.workers.dev
+
+# Uploaded images are stored in this folder and served from this URL.
 media_folder: "assets/img"
+public_folder: "/assets/img"
 
-# The CMS collections and their fields
 collections:
-  - name: "blog"
+  # Blog posts are Markdown files in posts/.
+  # Layout, URL, and the internal "post" tag come from posts/posts.11tydata.js.
+  - name: "posts"
     label: "Posts"
     label_singular: "Post"
     folder: "posts"
@@ -25,19 +35,38 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Author", name: "author", widget: "relation", collection: "authors", value_field: "name" }
-      - { label: "Summary", name: "summary", widget: "text" }
-      - { label: "Tags", name: "tags", widget: "list", default: ["post"], hint: "Enter tags separated by a comma" }
-      - label: "Image"
-        name: "image"
-        widget: "image"
-        hint: "Upload an image for this post. You can also use an image URL."
-        # Uncomment the lines below if you want to set a max file upload size e.g. 2MB
-        #media_library:
-          #config:
-            #max_file_size: 2048000 # maximum image file size in bytes
-      - { label: "Image Alt Text", name: "imageAltText", widget: "string" }
+      - {
+          label: "Author",
+          name: "author",
+          widget: "relation",
+          collection: "authors",
+          value_field: "name",
+        }
+      - {
+          label: "Summary",
+          name: "summary",
+          widget: "text",
+          required: false,
+          hint: "Optional one-sentence summary shown above the post body.",
+        }
+      - {
+          label: "Image",
+          name: "image",
+          widget: "image",
+          required: false,
+          hint: "Optional image uploaded to assets/img.",
+        }
+      - {
+          label: "Image Alt Text",
+          name: "imageAltText",
+          widget: "string",
+          required: false,
+          hint: "Describe the image for screen readers.",
+        }
       - { label: "Body", name: "body", widget: "markdown" }
+
+  # Regular pages are Markdown files in pages/.
+  # Layout and URL come from pages/pages.11tydata.js.
   - name: "pages"
     label: "Pages"
     label_singular: "Page"
@@ -46,16 +75,29 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Permalink", name: "permalink", widget: "hidden" }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          required: false,
+        }
       - label: "Navigation"
         name: "eleventyNavigation"
         widget: "object"
+        required: false
         fields:
-          - { label: "Key", name: "key", widget: "string", hint: "A unique string for your navigation item, typically the page slug." }
-          - { label: "Title", name: "title", widget: "string", hint: "The visible title of the navigation item." }
-          - { label: "Order", name: "order", widget: "number", default: 999, hint: "Set a number between 0 and 999 to set the display order of your navigation item." }
-      - { label: "Body", name: "body", widget: "markdown", hint: "Plain text, Markdown, and HTML formatting is supported. See the Markdown cheat sheet: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" }
+          - { label: "Key", name: "key", widget: "string" }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Order", name: "order", widget: "number", default: 999 }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          hint: "Plain Markdown. Do not add template syntax here.",
+        }
+
+  # Authors are Markdown files in authors/.
+  # The post author field references this collection by display name.
   - name: "authors"
     label: "Authors"
     label_singular: "Author"
@@ -65,24 +107,30 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: "Name", name: "name", widget: "string" }
-      - label: "Image"
-        name: "image"
-        widget: "image"
-        hint: "Upload an image for this author (max. 1MB). You can also use an image URL."
-        media_library:
-          config:
-            max_file_size: 1024000 # maximum image file size in bytes
-      - { label: "Description", name: "body", widget: "markdown", hint: "Plain text, Markdown, and HTML formatting is supported. See the Markdown cheat sheet: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" }
+      - {
+          label: "Image",
+          name: "image",
+          widget: "image",
+          required: false,
+          hint: "Optional author photo.",
+        }
+      - {
+          label: "Description",
+          name: "body",
+          widget: "markdown",
+          hint: "A short author bio.",
+        }
+
+  # Site settings live in _data/settings.yml.
   - name: "settings"
     label: "Settings"
     icon: "settings"
-    extension: "yml"
-    format: "yml"
     files:
       - file: "_data/settings.yml"
         label: "Site Settings"
         name: "site"
+        format: "yaml"
         fields:
-          - { label: "Site Title", name: "title", widget: "string", hint: "Your site's title, used for branding and SEO." }
-          - { label: "Site Description", name: "description", widget: "text", hint: "Your site's description, used for SEO." }
-          - { label: "Site URL", name: "url", widget: "string", hint: "Your live site's full URL." }
+          - { label: "Site Title", name: "title", widget: "string" }
+          - { label: "Site Description", name: "description", widget: "text" }
+          - { label: "Site URL", name: "url", widget: "string" }

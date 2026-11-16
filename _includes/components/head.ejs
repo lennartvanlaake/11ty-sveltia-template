@@ -1,0 +1,12 @@
+<%#
+  Head contract:
+  - Uses page title/description with settings fallbacks.
+  - CSS is inlined from _includes/assets/css/site.css.
+  - Keep metadata here, not in individual layouts.
+-%>
+<meta charset="utf-8">
+<meta name="generator" content="<%= eleventy.generator %>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= locals.title || settings.title %></title>
+<meta name="description" content="<%= locals.description || settings.description %>">
+<style><%- include('../assets/css/site.css') %></style>

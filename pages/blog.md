@@ -1,13 +1,11 @@
 ---
-layout: layouts/blog.njk
+layout: layouts/blog.ejs
 title: Blog
-description: A sample Blog index listing all posts.
-date: 2017-01-01
+description: All posts.
+permalink: /posts/index.html
 eleventyNavigation:
   key: blog
   title: Blog
   order: 1
 ---
-This is the blog index page, listing all posts by all [authors](/authors/).
-
-This text can be edited at: `pages/blog.md`
+Short notes and examples.

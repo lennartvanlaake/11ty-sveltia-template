@@ -1,0 +1,29 @@
+---
+layout: layouts/base.ejs
+section: author
+---
+<%#
+  Author layout contract:
+  - Required front matter: name.
+  - Optional front matter: image.
+  - `content` is the rendered author bio.
+  - The permalink is set in authors/authors.11tydata.js.
+  - `collections.myAuthors[name]` is built in eleventy.config.js.
+-%>
+<h1><%= name %></h1>
+
+<% if (locals.image) { %>
+  <img
+    src="<%= locals.image %>"
+    alt="<%= locals.name %>"
+    loading="lazy"
+    decoding="async">
+<% } %>
+
+<%- content %>
+
+<p>All posts by <%= name %></p>
+
+<%- include('../components/post-list', { postsList: collections.myAuthors[name] || [] }) %>
+
+<%- include('../components/nav-back', { backUrl: "/authors/", backTitle: "Authors" }) %>

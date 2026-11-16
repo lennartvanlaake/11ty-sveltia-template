@@ -1,104 +1,123 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/5ebf7378-bb17-482f-8e28-8dfbe0cd8a6a/deploy-status)](https://app.netlify.com/sites/eleventy-sveltia-cms-starter/deploys)
+# Eleventy + Sveltia CMS Starter
 
-# Eleventy Sveltia CMS Starter
+A deliberately small Eleventy site that demonstrates a clean structure for content-driven websites:
 
-## Demo: https://eleventy-sveltia-cms-starter.netlify.app/
+- Eleventy 3
+- EJS templates
+- Markdown content
+- Sveltia CMS in local-only mode
+- Bun for install and scripts
+- No host-specific deployment code
+- No client-side JavaScript
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/danurbanowicz/eleventy-sveltia-cms-starter)
-
-## What is it?
-
-This is a template for building a simple blog website with [Eleventy](https://www.11ty.dev) and [Sveltia CMS](https://github.com/sveltia/sveltia-cms), with automatic deployment to [Netlify](https://www.netlify.com).
-
-The aim is to get you up and running in a few minutes with a free, fast, and secure blog website with a headless CMS for editing your content.
-
-## Features
-
-- Scores 100/100/100/100 in Lighthouse tests
-- Support for blog posts, authors, tags, and website pages
-- Headless [Sveltia CMS](https://github.com/sveltia/sveltia-cms) compatible with Netlify/Decap CMS
-- Secure GitHub authentication (OAuth)
-- Includes zero clientside JavaScript by default
-- [Eleventy Image](https://www.11ty.dev/docs/plugins/image/) (sharp) processor for responsive images in next-gen formats
-- Contact form for [Netlify Forms](https://www.netlify.com/products/forms/)
-- CSS 1kb minified, inlined for fastest page render
-- Minifies your HTML too
-- Optional pipeline for minified inline JavaScript
-- Uses Nunjucks templates for layout
-- Netlify continuous deployment (CD) workflow
+The goal is not to be a full theme. The goal is to be a readable reference for how pages, posts, layouts, helpers, and CMS fields fit together.
 
 ## Requirements
 
-- A GitHub account
-- A Netlify account
-- Basic knowledge of the command line and git
+- Bun 1.4 or newer
+- A local Git repository for Sveltia's local workflow
 
-## Quick Deploy to Netlify
+## Quick start
 
-Optionally, you can [Deploy to this template to Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/danurbanowicz/eleventy-sveltia-cms-starter) which will create a new GitHub repository for you and link it to your Netlify account, configuring automatic deploys in one step.
-
-*Important: You will still need to configure the CMS and set up an OAuth application in GitHub to be able to authenticate and use the CMS on your live site (see steps below).*
-
-## Install this template
-
-1. Clone this repo or press the **Use this template** button to create a copy in your GitHub account.
-2. Make a local copy of your new repo.
-3. CD to your local repo root folder and install dependencies using `npm install`
-4. Open `admin/config.yml` and enter your GitHub repo details using the existing format and push your changes.
-5. In your Netlify account, go to **Sites** > **Add new site** > **Import an existing project**, connect to your GitHub account, and select the new repo you created earlier. Netlify will choose a random site name for you and you can change this to something else, or use your own custom domain.
-6. Back in your local copy of the repo, edit `_data/settings.yml` with your site title, description, and Netlify site URL and push your changes to GitHub.
-7. Once Netlify has deployed the changes to your site, go to `https://[your-netlify-site].netlify.app/admin/` and follow the steps to log in to the CMS with your GitHub account.
-8. You can now delete the sample posts and pages, and create your own new ones!
-
-## Local development
-
-You can work locally with Eleventy and the CMS without needing to configure any GitHub authentication. Make sure you've followed the **Install this template** steps above first.
-
-1. To start a local Eleventy dev server, CD to your project root folder and run `npx eleventy --serve`.
-2. In a browser, access the local dev URL which is usually: `http://localhost:8080/`.
-3. On changes to your project files, the site will be re-built. Important: live browser reloading is disabled in `.eleventy.js` due to a conflict with Sveltia CMS, therefore you'll need to manually reload the page in the browser to see your changes.
-4. To access the CMS, navigate to: `http://localhost:8080/admin/` and press the **Work with Local Repository** button, and select your local repo root folder.
-5. Saved changes made to the CMS can then be committed and pushed to your remote repository.
-
-## Configure the CMS for your live site
-
-Sveltia CMS needs to be connected to your GitHub account so it can authenticate you and make changes to your live site's content. Netlify facilitates this connection to GitHub for you. Note that all of your CMS users will need to have push access permissions to your content repository before they can log in. *Sveltia CMS does not yet support Netlify CMS's Git Gateway authentication method.*
-
-1. Set up OAuth: In GitHub, go to your account **Settings** and select **Developer Settings**, then **OAuth Apps** or use [this shortcut](https://github.com/settings/developers).
-2. Press the **New OAuth App** button
-3. For the **Authorization callback URL**, enter `https://api.netlify.com/auth/done`. For the **Homepage URL** enter your Netlify site URL e.g. `https://[your-netlify-site].netlify.app`. The other fields can contain anything you want.
-4. On your new application’s GitHub overview page, make note of the **Client ID**. Generate a **Client Secret** and make note of it for later. You can’t access this secret again.
-5. Next, in your Netlify site settings, go to **Site settings** > **Access control** > **OAuth** and under **Authentication Providers**, select **Install Provider**.
-6. Select **GitHub** and enter the **Client ID** and **Client Secret** from earlier, then save.
-7. Next, edit the following lines in your Sveltia CMS `admin/config.yml` file:
-
+```sh
+bun install
+bun run serve
 ```
-backend:
-  name: github
-  repo: owner-name/repo-name # Path to your GitHub repository
-  branch: master # Optional, defaults to master
+
+Open `http://localhost:8080/`.
+
+To edit content:
+
+1. Open `http://localhost:8080/admin/`.
+2. Choose **Work with Local Repository**.
+3. Select this project folder.
+4. Edit content and save. Sveltia writes the Markdown files directly.
+
+No OAuth server or third-party account is required.
+
+## Commands
+
+```sh
+bun run serve   # local dev server
+bun run build   # production build to _site/
+bun run watch   # rebuild on changes
+bun run debug   # verbose Eleventy debugging
+bun test        # CMS schema, build, and render tests
 ```
-8. Push your changes to GitHub, wait for the new deploy to complete, and try logging in to your CMS admin e.g. `https://[your-netlify-site].netlify.app/admin/`.
 
-## How Sveltia CMS works
+## Testing
 
-Sveltia CMS connects to your GitHub repo in the background via GitHub's GraphQL API. It uses your `admin/config.yml` file to know what your site's data looks like (pages, blog posts etc).
+`bun test` runs three automated checks:
 
-When you edit content through the CMS, it makes changes to the content files in your repo as git commits. Each time you make an edit and save your changes, it pushes a new commit to your repo which in turn triggers a new Netlify build of your site. This type of workflow is commonly referred to as Continuous Deployment (CD).
+- `admin/config.yml` against the official Sveltia CMS schema.
+- A clean build of the real site.
+- A throwaway fixture site whose content is generated from the CMS field definitions, then rendered through the real Eleventy layouts.
 
-All of your content edits are saved in your git repo commit history so you can roll back to a previous version of your site at any time using standard git commands, or by using the GitHub.com website UI.
+The render tests use randomized fixture values. They do not assert sample names such as `Jane Doe`, so normal content edits do not break the suite.
 
-If you choose to install this project locally, you can use the CMS to make changes to your local repo, and then manually push those changes to your remote (see steps above). This will trigger a new Netlify build of your site.
+## Project structure
 
-## Getting help with this template
+```text
+.
+├── admin/                  Sveltia CMS entry point and schema
+├── assets/img/             CMS media uploads, copied as-is
+├── authors/                Author Markdown and directory data
+├── pages/                  Page Markdown and directory data
+├── posts/                  Post Markdown and directory data
+├── _data/
+│   ├── helpers.js          Slug and date helpers
+│   └── settings.yml        Site-wide settings
+├── _includes/
+│   ├── assets/css/         Inlined stylesheet
+│   ├── components/         Reusable EJS fragments
+│   └── layouts/            Page-level EJS layouts
+├── eleventy.config.js      Collections and build configuration
+├── AGENTS.md               Instructions for AI coding agents
+├── docs/                   Content model and conventions
+└── tests/                  CMS schema, build, and render tests
+```
 
-If you need help setting up this template, or if you have any ideas or suggestions, head over to [Discussions](https://github.com/danurbanowicz/eleventy-sveltia-cms-starter/discussions) and create a new discussion.
+## How the content model works
 
-If you've found a bug or think something in this template is broken (very possible) please [open a new issue](https://github.com/danurbanowicz/eleventy-sveltia-cms-starter/issues) and provide as much information as you can to ensure a fast solution.
+- `pages/*.md` use `layouts/page.ejs` by default.
+- `posts/*.md` use `layouts/post.ejs` and receive the internal `post` tag.
+- `authors/*.md` use `layouts/author.ejs` and receive the internal `author` tag.
+- `*.11tydata.js` files define the shared layout, URL, and tags for each folder.
+- `pages/blog.md` uses the special `layouts/blog.ejs` layout to list posts.
+- `authors.ejs` generates the author index from the `author` collection.
 
-If you have a question specifically related to the Sveltia CMS project, we recommend you to head over there and [open a discussion](https://github.com/sveltia/sveltia-cms/discussions) for faster support.
+See `docs/content.md` for the front matter tables.
 
-## TO DO
-- Add quick CMS tips e.g. Sveltia CMS preferences
-- Finish the authors and blog page layouts
-- Add descriptive comments in project files to help new users
+## Sveltia CMS
+
+Configuration lives in `admin/config.yml`.
+This starter intentionally uses the local workflow only. The `backend` block is still required by Sveltia's configuration format, but the placeholder repo is not used when editing a local repository.
+
+If you later want live GitHub editing, you will need an OAuth client. Sveltia documents the options here:
+
+- https://sveltiacms.app/en/docs/backends/github
+
+Do not add host-specific auth or forms to this template.
+
+## Deployment
+
+This project has no host-specific configuration. Deploy the generated `_site/` directory to any static host.
+
+Typical settings:
+
+- Build command: `bun run build`
+- Publish directory: `_site`
+
+If the site is served from a subpath, update `pathPrefix` in `eleventy.config.js` and adjust root-relative links.
+
+## Conventions
+
+Read these before making structural changes:
+
+- `AGENTS.md` — rules for AI agents
+- `docs/content.md` — front matter and CMS mapping
+- `docs/conventions.md` — EJS, HTML, CSS, and accessibility rules
+
+## Credit
+
+Based on the Eleventy Sveltia CMS Starter by Dan Urbanowicz, licensed under MIT. This version has been simplified for use as an AI-agent reference and removes the original hosting integration.

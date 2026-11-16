@@ -1,0 +1,8 @@
+<%#
+  Back-link contract:
+  - Expects optional `backUrl` and `backTitle`.
+  - Provide both when including it to keep the label meaningful.
+-%>
+<nav aria-label="Section navigation">
+  <a href="<%= locals.backUrl || '/posts/' %>">← <%= locals.backTitle || 'Blog' %> index</a>
+</nav>

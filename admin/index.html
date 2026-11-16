@@ -1,13 +1,19 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="dns-prefetch" href="https://unpkg.com">
-    <title>Sveltia CMS</title>
+    <meta name="robots" content="noindex" />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+    <title>Content Manager</title>
   </head>
   <body>
-    <!-- Include the script that builds the page and powers Sveltia CMS -->
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+    <!--
+      Sveltia CMS boots from this module.
+      Configuration lives in admin/config.yml.
+      For local editing, start `bun run serve`, open /admin/, and choose
+      "Work with Local Repository".
+    -->
+    <script src="https://unpkg.com/@sveltia/cms@0.261.0/dist/sveltia-cms.js" type="module"></script>
   </body>
 </html>

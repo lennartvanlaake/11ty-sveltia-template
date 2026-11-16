@@ -1,3 +1,12 @@
-title: Eleventy Sveltia CMS Starter
-description: A template for building a fast Eleventy blog with Sveltia CMS, with deployment to Netlify
-url: https://eleventy-sveltia-cms-starter.netlify.app
+# Site-wide settings.
+# These values are available in templates as `settings.*`.
+# They are also editable in Sveltia CMS under Settings > Site Settings.
+
+# Used in the header and as the fallback page title.
+title: Example Site
+
+# Used as the fallback meta description.
+description: A small Eleventy + Sveltia CMS starter with EJS templates.
+
+# The live site URL. Update this before deploying.
+url: https://example.com
