@@ -1,6 +1,6 @@
 ---
 title: Example Site
-description: A small Eleventy + Sveltia CMS starter with EJS templates.
+description: A small Eleventy + Sveltia CMS starter with TSX templates.
 permalink: /
 eleventyNavigation:
   key: home

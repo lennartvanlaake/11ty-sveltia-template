@@ -3,7 +3,7 @@
 A deliberately small Eleventy site that demonstrates a clean structure for content-driven websites:
 
 - Eleventy 3
-- EJS templates
+- TSX templates rendered by jsx-async-runtime
 - Markdown content
 - Sveltia CMS in local-only mode
 - Bun for install and scripts
@@ -38,11 +38,12 @@ No OAuth server or third-party account is required.
 ## Commands
 
 ```sh
-bun run serve   # local dev server
-bun run build   # production build to _site/
-bun run watch   # rebuild on changes
-bun run debug   # verbose Eleventy debugging
-bun test        # CMS schema, build, and render tests
+bun run serve       # local dev server
+bun run build       # production build to _site/
+bun run watch       # rebuild on changes
+bun run debug       # verbose Eleventy debugging
+bun run typecheck   # check the TSX templates
+bun test            # CMS schema, build, and render tests
 ```
 
 ## Testing
@@ -69,9 +70,11 @@ The render tests use randomized fixture values. They do not assert sample names 
 │   └── settings.yml        Site-wide settings
 ├── _includes/
 │   ├── assets/css/         Inlined stylesheet
-│   ├── components/         Reusable EJS fragments
-│   └── layouts/            Page-level EJS layouts
+│   ├── components/         Reusable TSX components
+│   ├── layouts/            Page-level TSX layouts
+│   └── types.ts            Shared template types
 ├── eleventy.config.js      Collections and build configuration
+├── tsconfig.json           JSX and TypeScript settings
 ├── AGENTS.md               Instructions for AI coding agents
 ├── docs/                   Content model and conventions
 └── tests/                  CMS schema, build, and render tests
@@ -79,12 +82,12 @@ The render tests use randomized fixture values. They do not assert sample names 
 
 ## How the content model works
 
-- `pages/*.md` use `layouts/page.ejs` by default.
-- `posts/*.md` use `layouts/post.ejs` and receive the internal `post` tag.
-- `authors/*.md` use `layouts/author.ejs` and receive the internal `author` tag.
+- `pages/*.md` use `layouts/page.tsx` by default.
+- `posts/*.md` use `layouts/post.tsx` and receive the internal `post` tag.
+- `authors/*.md` use `layouts/author.tsx` and receive the internal `author` tag.
 - `*.11tydata.js` files define the shared layout, URL, and tags for each folder.
-- `pages/blog.md` uses the special `layouts/blog.ejs` layout to list posts.
-- `authors.ejs` generates the author index from the `author` collection.
+- `pages/blog.md` uses the special `layouts/blog.tsx` layout to list posts.
+- `pages/authors.md` uses `layouts/authors.tsx` to generate the author index from the `author` collection.
 
 See `docs/content.md` for the front matter tables.
 
@@ -116,7 +119,7 @@ Read these before making structural changes:
 
 - `AGENTS.md` — rules for AI agents
 - `docs/content.md` — front matter and CMS mapping
-- `docs/conventions.md` — EJS, HTML, CSS, and accessibility rules
+- `docs/conventions.md` — TSX, HTML, CSS, and accessibility rules
 
 ## Credit
 

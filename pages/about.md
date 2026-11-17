@@ -9,7 +9,7 @@ eleventyNavigation:
 This starter demonstrates a small Eleventy site with:
 
 - Markdown content
-- EJS layouts and components
+- TSX layouts and components
 - A local Sveltia CMS
 - No client-side JavaScript
 

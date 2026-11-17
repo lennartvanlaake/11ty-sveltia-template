@@ -1,6 +1,6 @@
 # Content model
 
-Content is plain Markdown with YAML front matter. Template syntax is intentionally disabled in Markdown, so content files should never contain EJS.
+Content is plain Markdown with YAML front matter. Template syntax is intentionally disabled in Markdown, so content files should never contain TSX.
 
 ## Pages
 

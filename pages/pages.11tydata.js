@@ -9,6 +9,6 @@
  * Example: pages/home.md overrides permalink to "/".
  */
 export default {
-  layout: "layouts/page.ejs",
+  layout: "layouts/page.tsx",
   permalink: (data) => `/${data.page.fileSlug}/`,
 };

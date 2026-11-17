@@ -1,5 +1,5 @@
 ---
-layout: layouts/blog.ejs
+layout: layouts/blog.tsx
 title: Blog
 description: All posts.
 permalink: /posts/index.html

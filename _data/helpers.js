@@ -1,8 +1,8 @@
 /**
- * Presentation helpers shared by EJS templates and directory data files.
+ * Presentation helpers shared by TSX templates and directory data files.
  *
  * Keep logic here (or in .11tydata.js files) instead of inside templates.
- * EJS templates should render values; they should not compute slugs or dates.
+ * TSX templates should render values; they should not compute slugs or dates.
  */
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -44,7 +44,7 @@ export function machineDate(value) {
   return date.toISOString().slice(0, 10);
 }
 
-// EJS receives the module namespace as `helpers`.
+// Eleventy exposes the module namespace as `helpers`.
 // The default export keeps the module pleasant to import from plain JS.
 export default {
   slug,

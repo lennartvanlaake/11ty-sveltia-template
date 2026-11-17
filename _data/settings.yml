@@ -6,7 +6,7 @@
 title: Example Site
 
 # Used as the fallback meta description.
-description: A small Eleventy + Sveltia CMS starter with EJS templates.
+description: A small Eleventy + Sveltia CMS starter with TSX templates.
 
 # The live site URL. Update this before deploying.
 url: https://example.com

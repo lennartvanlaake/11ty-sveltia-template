@@ -7,7 +7,7 @@ Read this before changing the project.
 This repository is a small reference implementation of how this site should be built:
 
 - Eleventy 3
-- EJS templates
+- TSX templates rendered by jsx-async-runtime
 - Markdown content
 - Sveltia CMS in local-only mode
 - Bun for install and scripts
@@ -19,7 +19,7 @@ Optimize for clarity and small diffs, not feature count.
 
 - Do not add host-specific deployment code, forms, redirects, or configuration.
 - Do not add Nunjucks, Liquid, Pug, Handlebars, or another template language.
-- Do not add React, Vue, Svelte, or a client-side framework.
+- Do not add a client-side framework. TSX is build-time only.
 - Do not add client-side JavaScript unless the user explicitly asks for it.
 - Do not add a CSS framework or a build step for CSS.
 - Do not add a dependency without a clear, documented reason.
@@ -32,6 +32,7 @@ bun install
 bun run serve
 bun run build
 bun run debug
+bun run typecheck
 bun test
 ```
 
@@ -50,8 +51,8 @@ Tests must stay content-independent. Do not assert sample names, slugs, or body 
 ## Architecture
 
 - `pages/`, `posts/`, and `authors/` contain Markdown content.
-- `_includes/layouts/` contains page-level EJS layouts.
-- `_includes/components/` contains reusable EJS fragments.
+- `_includes/layouts/` contains page-level TSX layouts.
+- `_includes/components/` contains reusable TSX components.
 - `_data/` contains global data and presentation helpers.
 - `*.11tydata.js` files define per-directory defaults: layout, URL, and tags.
 - `eleventy.config.js` defines collections, passthrough copies, and template engines.
@@ -63,29 +64,31 @@ The flow is:
 1. Markdown provides content and front matter.
 2. Directory data files provide shared layout, URL, and tags.
 3. Eleventy builds collections.
-4. EJS layouts and components render HTML.
+4. TSX layouts and components render HTML.
 5. Helpers format dates and slugs.
 
-## EJS rules
+## TSX rules
 
-Use EJS only.
+Use TSX only. Components are functions rendered to strings by `jsx-async-runtime`.
 
-```ejs
-<%= value %>              escaped output
-<%- value %>              raw output
-<% if (condition) { %>    control flow
-<% } %>
-<%- include('path') %>    include another template
+```tsx
+{value}                    escaped text
+<h1>{title}</h1>           element
+{condition && <p>...</p>}  conditional
+{html(content)}            rendered Markdown (raw)
 ```
 
 Rules:
 
-- Use `<%= %>` by default.
-- Use `<%- %>` only for `content` and includes.
-- Access optional front matter through `locals`, for example `<% if (locals.summary) { %>`.
-- Pass include data explicitly: `<%- include('../components/post-list', { postsList: collections.post }) %>`.
+- Use `{value}` by default; text and attributes are escaped.
+- Use `html()` only for rendered Markdown (`content`) and the stylesheet.
+- Type props with `PageData` from `_includes/types.ts`.
+- Pass data to components explicitly as props.
+- Do not put YAML front matter in `.tsx` files. Put layout data in `*.11tydata.js`.
 - Do not fetch data, sort collections, build slugs, or format dates inside templates. Put that logic in `_data/helpers.js`, a `*.11tydata.js` file, or `eleventy.config.js`.
-- Do not introduce Nunjucks or Liquid syntax.
+- Do not add client-side JavaScript or a client-side framework.
+- Do not introduce Nunjucks, Liquid, or another template language.
+- Build with Bun. `bun run build` compiles the TSX templates.
 
 ## Content rules
 
@@ -132,6 +135,7 @@ When adding or renaming a front matter field, update all of these together:
 Before finishing a change:
 
 - `bun run build` passes.
+- `bun run typecheck` passes.
 - `bun test` passes.
 - `_site/index.html` exists.
 - New content produces the expected URL.

@@ -9,7 +9,7 @@
  * The CMS creates files using the slug from the title, so filenames stay stable.
  */
 export default {
-  layout: "layouts/post.ejs",
+  layout: "layouts/post.tsx",
   tags: ["post"],
   permalink: (data) => `/posts/${data.page.fileSlug}/`,
 };

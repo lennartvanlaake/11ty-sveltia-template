@@ -1,38 +1,37 @@
 # Conventions
 
-## EJS
+## TSX
 
-EJS is the only template language in this project.
+TSX is the only template language. Templates are functions rendered to strings by `jsx-async-runtime`.
 
-```ejs
-<%= value %>              escaped output
-<%- value %>              raw output
-<% if (condition) { %>    control flow
-<% } %>
-<%- include('path') %>    include
+```tsx
+{value}                    escaped text
+<h1>{title}</h1>           element
+{condition && <p>...</p>}  conditional
+{html(content)}            rendered Markdown (raw)
 ```
 
 Rules:
 
-- Use `<%= %>` by default so content is escaped.
-- Use `<%- %>` only for rendered Markdown (`content`) and includes.
-- Access optional front matter through `locals`.
-- Pass data to includes explicitly.
+- Use `{value}` by default so text is escaped.
+- Use `html()` only for rendered Markdown (`content`) and the stylesheet.
+- Type props with `PageData` from `_includes/types.ts`.
+- Pass data to components explicitly as props.
 - Keep templates declarative. Do not compute slugs, format dates, sort collections, or fetch data inside a template.
 
 Good:
 
-```ejs
-<time datetime="<%= helpers.machineDate(page.date) %>">
-  <%= helpers.readableDate(page.date) %>
+```tsx
+<time datetime={helpers.machineDate(page.date)}>
+  {helpers.readableDate(page.date)}
 </time>
 ```
 
 Bad:
 
-```ejs
-<time datetime="<%= page.date.toISOString().slice(0, 10) %>">
-  <%= page.date.toLocaleDateString("en", { dateStyle: "medium" }) %>
+```tsx
+<time datetime={page.date.toISOString().slice(0, 10)}>
+  {page.date.toLocaleDateString("en", { dateStyle: "medium" })}
 </time>
 ```
 

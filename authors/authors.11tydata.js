@@ -9,7 +9,7 @@ import { slugify } from "../_data/helpers.js";
  * - a URL based on the author's display name, e.g. "Jane Doe" -> /authors/jane-doe/
  */
 export default {
-  layout: "layouts/author.ejs",
+  layout: "layouts/author.tsx",
   tags: ["author"],
   permalink: (data) => `/authors/${slugify(data.name)}/`,
   eleventyComputed: {

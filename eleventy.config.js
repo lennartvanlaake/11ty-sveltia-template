@@ -1,18 +1,85 @@
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import yaml from "js-yaml";
-import ejsPlugin from "@11ty/eleventy-plugin-ejs";
+import { jsxToString } from "jsx-async-runtime";
+
+const bundleDir = join(process.cwd(), ".cache", "tsx");
+let buildVersion = 0;
+
+async function loadTemplate(inputPath) {
+  const result = await Bun.build({
+    entrypoints: [inputPath],
+    target: "bun",
+    format: "esm",
+    write: false,
+  });
+
+  if (!result.success) {
+    const details = result.logs
+      .map((log) => log.message ?? String(log))
+      .join("\n");
+    throw new Error(`Could not compile ${inputPath}:\n${details}`);
+  }
+
+  const code = await result.outputs[0].text();
+  const hash = createHash("sha1").update(code).digest("hex");
+  const outfile = join(bundleDir, `${hash}.mjs`);
+
+  if (!existsSync(outfile)) {
+    writeFileSync(outfile, code);
+  }
+
+  const mod = await import(pathToFileURL(outfile).href);
+  return mod.default;
+}
 
 /**
  * Eleventy configuration.
  *
  * This project deliberately keeps the build small:
- * - EJS is the only template language.
+ * - TSX is the only template language, rendered to strings by jsx-async-runtime.
  * - Markdown is plain content (no template syntax in content files).
  * - JavaScript data files and _data/helpers.js hold computed values.
  * - No minification, image pipeline, or client-side JavaScript.
  */
 export default function (eleventyConfig) {
-  // EJS moved out of Eleventy core in v3. This official plugin registers it.
-  eleventyConfig.addPlugin(ejsPlugin);
+  if (typeof Bun === "undefined") {
+    throw new Error(
+      "This project must be built with Bun so .tsx templates can be compiled. Run `bun run build`.",
+    );
+  }
+
+  mkdirSync(bundleDir, { recursive: true });
+
+  eleventyConfig.on("beforeBuild", () => {
+    buildVersion += 1;
+  });
+
+  /**
+   * Compile TSX templates with Bun.
+   *
+   * Each template is bundled into .cache/tsx so imported components are
+   * re-read on every build. Bundles are content-addressed so changed
+   * components get a new path instead of Bun's cached module.
+   */
+  eleventyConfig.addExtension("tsx", {
+    compile: async (_content, inputPath) => {
+      let loadedFor = -1;
+      let templatePromise;
+
+      return async (data) => {
+        if (loadedFor !== buildVersion) {
+          loadedFor = buildVersion;
+          templatePromise = loadTemplate(inputPath);
+        }
+
+        const template = await templatePromise;
+        return jsxToString(template({ ...data, content: data.content }));
+      };
+    },
+  });
 
   // Sveltia writes site settings as YAML; teach Eleventy to read .yml data.
   eleventyConfig.addDataExtension("yml", (contents) => yaml.load(contents));
@@ -70,16 +137,16 @@ export default function (eleventyConfig) {
   eleventyConfig.setServerOptions({ liveReload: false });
 
   return {
-    // Markdown files are content; EJS files are presentation.
-    templateFormats: ["md", "ejs"],
+    // Markdown files are content; TSX files are presentation.
+    templateFormats: ["md", "tsx"],
 
     // Change this only if the site is deployed under a subpath.
     pathPrefix: "/",
 
     // Never process template syntax inside Markdown content.
     markdownTemplateEngine: false,
-    htmlTemplateEngine: "ejs",
-    dataTemplateEngine: "ejs",
+    htmlTemplateEngine: false,
+    dataTemplateEngine: false,
 
     dir: {
       input: ".",

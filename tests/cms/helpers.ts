@@ -286,7 +286,7 @@ export function createFixtureSite(): FixtureSite {
     cpSync(join(repoRoot, "_data/helpers.js"), join(root, "_data/helpers.js"));
     cpSync(join(repoRoot, "eleventy.config.js"), join(root, "eleventy.config.js"));
     cpSync(join(repoRoot, "package.json"), join(root, "package.json"));
-    cpSync(join(repoRoot, "authors.ejs"), join(root, "authors.ejs"));
+    cpSync(join(repoRoot, "tsconfig.json"), join(root, "tsconfig.json"));
 
     for (const name of ["pages", "posts", "authors"]) {
       mkdirSync(join(root, name), { recursive: true });
@@ -343,9 +343,17 @@ export function createFixtureSite(): FixtureSite {
       title: tokens.blogTitle,
       description: tokens.pageDescription,
     });
-    blogData.layout = "layouts/blog.ejs";
+    blogData.layout = "layouts/blog.tsx";
     blogData.permalink = "/posts/index.html";
     writeMarkdown(join(root, "pages", "blog.md"), blogData, tokens.blogBody);
+
+    const authorsIndexData = valuesFor(pageFields, {
+      title: "Authors",
+      description: "All authors.",
+    });
+    authorsIndexData.layout = "layouts/authors.tsx";
+    authorsIndexData.permalink = "/authors/index.html";
+    writeMarkdown(join(root, "pages", "authors.md"), authorsIndexData, "");
 
     writeYaml(
       join(root, "_data", "settings.yml"),

@@ -3,24 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "A minimal Eleventy + Sveltia CMS starter using EJS templates.",
+  "description": "A minimal Eleventy + Sveltia CMS starter using TSX templates.",
   "packageManager": "bun@1.4.4",
   "scripts": {
     "build": "eleventy",
     "watch": "eleventy --watch",
     "serve": "eleventy --serve",
     "debug": "DEBUG=* eleventy",
+    "typecheck": "tsc --noEmit",
     "test": "bun test tests/cms"
   },
   "engines": {
-    "node": ">=18"
+    "bun": ">=1.4.4"
   },
   "license": "MIT",
   "devDependencies": {
     "@11ty/eleventy": "^3.1.8",
-    "@11ty/eleventy-plugin-ejs": "^1.0.0",
     "@sveltia/cms": "0.261.0",
+    "@types/node": "^26.6.6",
     "ajv": "^8.20.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "jsx-async-runtime": "^3.0.1",
+    "typescript": "^7.0.2"
   }
 }
